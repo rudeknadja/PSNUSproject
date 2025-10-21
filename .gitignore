@@ -1,0 +1,21 @@
+# Build folders
+bin/
+obj/
+.vs/
+*.user
+*.suo
+
+# Visual Studio Code
+.vscode/
+
+# Temporary files
+*.log
+*.tmp
+
+# Backup files
+*.bak
+*.old
+
+# NuGet packages
+*.nupkg
+packages/
