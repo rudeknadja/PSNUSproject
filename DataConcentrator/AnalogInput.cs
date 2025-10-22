@@ -15,6 +15,8 @@ namespace DataConcentrator
         public bool OnOffScan { get; set; }
         public double CurrentValue { get; private set; }
 
+        public List<Alarm> Alarms { get; private set; } = new List<Alarm>();
+
         public AnalogInput(string tagName, string description, string ioAddress,
                            double lowLimit, double highLimit, string units, int scanTime, bool onOffScan)
             : base(tagName, description, ioAddress)
@@ -35,10 +37,34 @@ namespace DataConcentrator
         public override void WriteValue(double value)
         {
             CurrentValue = value;
+
+            // Proveri da li je vrednost van granica
             if (value < LowLimit || value > HighLimit)
             {
-                Console.WriteLine($"[ALARM] {TagName} out of range: {value} {Units}");
+                Console.WriteLine($"[WARNING] {TagName}: Value {value}{Units} out of allowed range ({LowLimit}-{HighLimit})");
+            }
+
+            // Proveri sve alarme koji su vezani za ovu veličinu
+            foreach (var alarm in Alarms)
+            {
+                alarm.CheckActivation(value);
             }
         }
+
+        public void AddAlarm(Alarm alarm)
+        {
+            if (alarm.TagName != TagName)
+            {
+                Console.WriteLine($"[WARNING] Alarm {alarm.Id} is linked to a different tag!");
+                return;
+            }
+            Alarms.Add(alarm);
+        }
+
+        public void RemoveAlarm(string alarmId)
+        {
+            Alarms.RemoveAll(a => a.Id == alarmId);
+        }
+
     }
 }
