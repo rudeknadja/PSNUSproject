@@ -52,20 +52,20 @@ namespace DataConcentrator
                 Deactivate();
             }
 
-            return false; // nije novo aktiviran
+            return false; // nije aktiviran
         }
 
         private void Activate()
         {
             IsActive = true;
             TimeActivated = DateTime.Now;
-            Console.WriteLine($"[ALARM ACTIVATED] {TagName} - {Message} (limit: {Limit}) at {TimeActivated}");
+          //  Console.WriteLine($"[ALARM ACTIVATED] {TagName} - {Message} (limit: {Limit}) at {TimeActivated}");
         }
 
         private void Deactivate()
         {
             IsActive = false;
-            Console.WriteLine($"[ALARM CLEARED] {TagName} - {Message}");
+          //  Console.WriteLine($"[ALARM CLEARED] {TagName} - {Message}");
         }
     }
 }

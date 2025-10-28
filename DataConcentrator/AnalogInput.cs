@@ -41,7 +41,7 @@ namespace DataConcentrator
             // Proveri da li je vrednost van granica
             if (value < LowLimit || value > HighLimit)
             {
-                Console.WriteLine($"[WARNING] {TagName}: Value {value}{Units} out of allowed range ({LowLimit}-{HighLimit})");
+              //  Console.WriteLine($"[WARNING] {TagName}: Value {value}{Units} out of allowed range ({LowLimit}-{HighLimit})");
             }
 
             // Proveri sve alarme koji su vezani za ovu veličinu
@@ -55,7 +55,7 @@ namespace DataConcentrator
         {
             if (alarm.TagName != TagName)
             {
-                Console.WriteLine($"[WARNING] Alarm {alarm.Id} is linked to a different tag!");
+               // Console.WriteLine($"[WARNING] Alarm {alarm.Id} is linked to a different tag!");
                 return;
             }
             Alarms.Add(alarm);

@@ -13,13 +13,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using DataConcentrator;
+using System.Windows.Threading;
 
 namespace ScadaGUI
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-
     public partial class MainWindow : Window
     {
         private DataConcentrator.DataConcentrator dc;
@@ -29,40 +27,82 @@ namespace ScadaGUI
         {
             InitializeComponent();
 
-            // 🟩 Inicijalizuj DataConcentrator i ConfigurationManager
             dc = new DataConcentrator.DataConcentrator();
             configManager = new ConfigurationManager();
+            dc.StartScanning();
 
-            // 🟩 (opciono) učitaj konfiguraciju
             var loadedTags = configManager.LoadConfiguration();
             foreach (var tag in loadedTags)
-            {
                 dc.AddTag(tag);
-            }
 
             RefreshTables();
+
+            var timer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(1)
+            };
+            timer.Tick += (s, e) => RefreshTables();
+            timer.Start();
         }
 
         private void RefreshTables()
         {
-            List<Tag> tags = dc.GetAllTags();
-            List<Alarm> alarms = dc.GetActiveAlarms();
-
-            TagDataGrid.ItemsSource = null;
-            TagDataGrid.ItemsSource = tags;
-
-            AlarmDataGrid.ItemsSource = null;
-            AlarmDataGrid.ItemsSource = alarms;
+            TagDataGrid.ItemsSource = dc.GetAllTags();
+            AlarmDataGrid.ItemsSource = dc.GetActiveAlarms();
         }
 
-        private void Refresh_Click(object sender, RoutedEventArgs e)
+        private void Refresh_Click(object sender, RoutedEventArgs e) => RefreshTables();
+
+        private void Exit_Click(object sender, RoutedEventArgs e) => Application.Current.Shutdown();
+
+        private void AddTag_Click(object sender, RoutedEventArgs e)
         {
+            var addWindow = new AddTagWindow();
+            if (addWindow.ShowDialog() == true)
+            {
+                string name = addWindow.TagName;
+                string address = addWindow.Address;
+                string type = addWindow.TagType;
+                bool scan = addWindow.OnOffScan;
+
+                switch (type)
+                {
+                    case "AnalogInput":
+                        dc.AddTag(new AnalogInput(name, "User added AI", address, 0, 100, "°C", 1000, scan));
+                        break;
+                    case "DigitalInput":
+                        dc.AddTag(new DigitalInput(name, "User added DI", address, 1000, scan));
+                        break;
+                    case "AnalogOutput":
+                        dc.AddTag(new AnalogOutput(name, "User added AO", address, 0, 100, 0, "°C"));
+                        break;
+                    case "DigitalOutput":
+                        dc.AddTag(new DigitalOutput(name, "User added DO", address, false));
+                        break;
+                }
+
+                RefreshTables();
+            }
+        }
+
+        private void RemoveTag_Click(object sender, RoutedEventArgs e)
+        {
+            if (TagDataGrid.SelectedItem is Tag selected)
+                dc.RemoveTag(selected.TagName);
+            else
+                MessageBox.Show("Select a tag to remove.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+
             RefreshTables();
         }
 
-        private void Exit_Click(object sender, RoutedEventArgs e)
+        private void Start_Click(object sender, RoutedEventArgs e)
         {
-            Application.Current.Shutdown();
+            dc.StartScanning();
+        }
+
+        private void Stop_Click(object sender, RoutedEventArgs e)
+        {
+            dc.StopScanning();
         }
     }
 }
