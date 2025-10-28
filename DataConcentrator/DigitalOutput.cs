@@ -25,9 +25,10 @@ namespace DataConcentrator
 
         public override void WriteValue(double value)
         {
-            bool newValue = value != 0;
-            CurrentValue = newValue;
-            Console.WriteLine($"[INFO] Digital Output '{TagName}' set to {(newValue ? "ON" : "OFF")}");
+            CurrentValue = value != 0;
+            //bool newValue = value != 0;
+            //CurrentValue = newValue;
+            //Console.WriteLine($"[INFO] Digital Output '{TagName}' set to {(newValue ? "ON" : "OFF")}");
         }
     }
 }

@@ -30,11 +30,12 @@ namespace DataConcentrator
             return CurrentValue;
         }
 
+        //nista
         public override void WriteValue(double value)
         {
             if (value < LowLimit || value > HighLimit)
             {
-                Console.WriteLine($"[WARNING] {TagName}: Value {value} {Units} out of range ({LowLimit}-{HighLimit})");
+               // Console.WriteLine($"[WARNING] {TagName}: Value {value} {Units} out of range ({LowLimit}-{HighLimit})");
             }
             CurrentValue = value;
         }

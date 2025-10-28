@@ -27,8 +27,9 @@ namespace DataConcentrator
 
         public override void WriteValue(double value)
         {
+            //nista
             // Dolazi iz PLC-a
-            Console.WriteLine($"[INFO] Cannot write to Digital Input '{TagName}'. Value is read-only.");
+           // Console.WriteLine($"[INFO] Cannot write to Digital Input '{TagName}'. Value is read-only.");
         }
 
         public void UpdateValue(bool newValue)
