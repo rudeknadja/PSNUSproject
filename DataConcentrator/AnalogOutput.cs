@@ -12,7 +12,9 @@ namespace DataConcentrator
         public double LowLimit { get; set; }
         public double HighLimit { get; set; }
         public string Units { get; set; }
-        public double CurrentValue { get; private set; }
+        public double CurrentValue { get; set; }
+
+        public AnalogOutput() : base() {}
 
         public AnalogOutput(string tagName, string description, string ioAddress,
                             double initialValue, double lowLimit, double highLimit, string units)
@@ -30,7 +32,6 @@ namespace DataConcentrator
             return CurrentValue;
         }
 
-        //nista
         public override void WriteValue(double value)
         {
             if (value < LowLimit || value > HighLimit)

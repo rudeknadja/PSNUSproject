@@ -9,7 +9,10 @@ namespace DataConcentrator
     public class DigitalOutput : Tag
     {
         public bool InitialValue { get; set; }
-        public bool CurrentValue { get; private set; }
+        public bool CurrentValue { get; set; }
+
+
+        public DigitalOutput() : base() { }
 
         public DigitalOutput(string tagName, string description, string ioAddress, bool initialValue)
             : base(tagName, description, ioAddress)

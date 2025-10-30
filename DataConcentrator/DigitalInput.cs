@@ -10,7 +10,9 @@ namespace DataConcentrator
     {
         public int ScanTime { get; set; }
         public bool OnOffScan { get; set; }
-        public bool CurrentValue { get; private set; }
+        public bool CurrentValue { get; set; }
+
+        public DigitalInput() : base() { }
 
         public DigitalInput(string tagName, string description, string ioAddress,
                             int scanTime, bool onOffScan)
@@ -27,9 +29,8 @@ namespace DataConcentrator
 
         public override void WriteValue(double value)
         {
-            //nista
+            // Nista
             // Dolazi iz PLC-a
-           // Console.WriteLine($"[INFO] Cannot write to Digital Input '{TagName}'. Value is read-only.");
         }
 
         public void UpdateValue(bool newValue)

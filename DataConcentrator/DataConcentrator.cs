@@ -20,7 +20,7 @@ namespace DataConcentrator
         {
             plcVar = new PLCSimulatorManager();
             plcVar.StartPLCSimulator();
-           // Console.WriteLine("[INFO] PLC Simulator started.");
+            // Console.WriteLine("[INFO] PLC Simulator started.");
         }
 
         // Dodavanje novog taga
@@ -98,18 +98,6 @@ namespace DataConcentrator
               //  Console.WriteLine($"[WARNING] Tag '{tagName}' not found!");
             }
         }
-
-
-       /* // prikaz tagova
-        public void ListTags()
-        {
-            Console.WriteLine("\n--- TAGS IN SYSTEM ---");
-            foreach (var tag in _tags.Values)
-            {
-                Console.WriteLine(tag);
-            }
-            Console.WriteLine("----------------------\n");
-        }*/
 
         // Metoda za proveru svih alarma (npr. kad se koristi u petlji)
         public void CheckAllAlarms()

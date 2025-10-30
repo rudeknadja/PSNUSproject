@@ -41,10 +41,16 @@ namespace PLCSimulator
             // DI
             // TODO: dodati jos nekoliko adresa za DI (recimo po 4 za svaku vrstu tagova)
             addressValues.Add("ADDR009", 0);
+            addressValues.Add("ADDR019", 0);
+            addressValues.Add("ADDR029", 0);
+            addressValues.Add("ADDR039", 0);
 
             // DO
             // TODO: dodati jos nekoliko adresa za DI (recimo po 4 za svaku vrstu tagova)
             addressValues.Add("ADDR010", 0);
+            addressValues.Add("ADDR011", 0);
+            addressValues.Add("ADDR012", 0);
+            addressValues.Add("ADDR013", 0);
         }
 
         public void StartPLCSimulator()
@@ -69,6 +75,9 @@ namespace PLCSimulator
                     addressValues["ADDR003"] = 50 * Math.Cos((double)DateTime.Now.Second / 60 * Math.PI); //COS
                     addressValues["ADDR004"] = RandomNumberBetween(0, 50);  //rand
                 }
+                // Ispis cisto da vidimo da li PLC Simulator radi
+                Console.WriteLine($"ADDR001 = {addressValues["ADDR001"]:F2}");
+
             }
         }
 
@@ -88,7 +97,11 @@ namespace PLCSimulator
                     {
                         addressValues["ADDR009"] = 0;
                     }
+                    // TODO: add other digital inputs
                 }
+                // Ispis cisto da vidimo da li PLC Simulator radi
+                Console.WriteLine($"ADDR009 = {addressValues["ADDR009"]:F2}");
+
             }
         }
 

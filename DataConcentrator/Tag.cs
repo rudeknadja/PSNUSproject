@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace DataConcentrator
 {
@@ -11,6 +12,14 @@ namespace DataConcentrator
         public string TagName { get; set; }
         public string Description { get; set; }
         public string IOAddress { get; set; }
+        public string TypeName => GetType().Name;
+
+        public virtual void AddAlarm(Alarm alarm) { } //AnalogInput
+
+        public virtual void RemoveAlarm(Alarm alarm) { } //AnalogInput
+
+
+        public Tag() { }
 
         protected Tag(string tagName, string description, string ioAddress)
         {

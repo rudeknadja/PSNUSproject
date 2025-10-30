@@ -16,9 +16,18 @@
         <!-- tagovi -->
         <GroupBox Header="Tagovi" FontWeight="Bold">
             <DataGrid x:Name="TagDataGrid"
-                      AutoGenerateColumns="True"
-                      IsReadOnly="True"
-                      Margin="5" />
+              AutoGenerateColumns="False"
+              IsReadOnly="True"
+              Margin="5">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Tag Name" Binding="{Binding TagName}" Width="*" />
+                    <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*" />
+                    <DataGridTextColumn Header="Type" Binding="{Binding TypeName}" Width="*" />
+                    <DataGridTextColumn Header="AddressValue" Binding="{Binding IOAddress}" Width="*" />
+                    <DataGridTextColumn Header="Current Value" Binding="{Binding CurrentValue}" Width="*" />
+                    <DataGridTextColumn Header="Scan On/Off" Binding="{Binding OnOffScan}" Width="*" />
+                </DataGrid.Columns>
+            </DataGrid>
         </GroupBox>
 
         <!-- alarm!! -->
@@ -31,12 +40,15 @@
 
         <!-- refresh i exit -->
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
-            <Button Content="Refresh" Width="100" Margin="5" Click="Refresh_Click"/>
-            <Button Content="Add Tag" Width="100" Margin="5" Click="AddTag_Click"/>
-            <Button Content="Remove Tag" Width="100" Margin="5" Click="RemoveTag_Click"/>
-            <Button Content="Exit" Width="100" Margin="5" Click="Exit_Click"/>
-            <Button Content="Start" Width="100" Margin="5" Click="Start_Click"/>
-            <Button Content="Stop" Width="100" Margin="5" Click="Stop_Click"/>
+            <Button Content="Refresh" Width="80" Margin="5" Click="Refresh_Click"/>
+            <Button Content="Add Tag" Width="80" Margin="5" Click="AddTag_Click"/>
+            <Button Content="Remove Tag" Width="80" Margin="5" Click="RemoveTag_Click"/>
+            <Button x:Name="AddAlarmButton" Content="Add Alarm" Width="80" Margin="5" Click="AddAlarm_Click"/>
+            <Button x:Name="RemoveAlarmButton" Content="Remove Alarm" Width="80" Margin="5" Click="RemoveAlarm_Click"/>
+            <Button Content="Exit" Width="80" Margin="5" Click="Exit_Click"/>
+            <!-- TODO: izbrisi (mozda) -->
+            <Button Content="Start" Width="80" Margin="5" Click="Start_Click"/>
+            <Button Content="Stop" Width="80" Margin="5" Click="Stop_Click"/>
 
         </StackPanel>
     </Grid>

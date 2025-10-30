@@ -1,0 +1,27 @@
+﻿<Window x:Class="ScadaGUI.AddAlarmWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ScadaGUI"
+        mc:Ignorable="d"
+        Title="AddAlarmWindow" Height="450" Width="800">
+    <StackPanel Margin="10">
+        <TextBlock Text="Select Tag:"/>
+        <ComboBox x:Name="TagComboBox" DisplayMemberPath="TagName"/>
+
+        <TextBlock Text="Alarm ID:" Margin="0,10,0,0"/>
+        <TextBox x:Name="AlarmIdTextBox"/>
+
+        <TextBlock Text="Alarm Type:" Margin="0,10,0,0"/>
+        <StackPanel Orientation="Horizontal">
+            <RadioButton x:Name="HighRadio" Content="High" IsChecked="True" Margin="0,0,10,0"/>
+            <RadioButton x:Name="LowRadio" Content="Low"/>
+        </StackPanel>
+
+        <TextBlock Text="Message:" Margin="0,10,0,0"/>
+        <TextBox x:Name="MessageTextBox"/>
+
+        <Button Content="Add" Margin="0,10,0,0" Width="80" HorizontalAlignment="Right" Click="Add_Click"/>
+    </StackPanel>
+</Window>

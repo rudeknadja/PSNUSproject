@@ -29,11 +29,18 @@ namespace ScadaGUI
 
             dc = new DataConcentrator.DataConcentrator();
             configManager = new ConfigurationManager();
-            dc.StartScanning();
+            //dc.StartScanning();
 
             var loadedTags = configManager.LoadConfiguration();
             foreach (var tag in loadedTags)
+            {
                 dc.AddTag(tag);
+                if (tag.TagName == "AI1")
+                {
+                    ((AnalogInput)tag).AddAlarm(new Alarm("Alarm1", tag.TagName, 50, AlarmType.High, "majmune"));
+                }
+            }
+                
 
             RefreshTables();
 
@@ -53,7 +60,11 @@ namespace ScadaGUI
 
         private void Refresh_Click(object sender, RoutedEventArgs e) => RefreshTables();
 
-        private void Exit_Click(object sender, RoutedEventArgs e) => Application.Current.Shutdown();
+        private void Exit_Click(object sender, RoutedEventArgs e)
+        {
+            configManager.SaveConfiguration(dc.GetAllTags());
+            Application.Current.Shutdown();
+        }
 
         private void AddTag_Click(object sender, RoutedEventArgs e)
         {
@@ -61,23 +72,54 @@ namespace ScadaGUI
             if (addWindow.ShowDialog() == true)
             {
                 string name = addWindow.TagName;
+                string desc = addWindow.Description;
                 string address = addWindow.Address;
                 string type = addWindow.TagType;
-                bool scan = addWindow.OnOffScan;
-
+                // Tip taga
                 switch (type)
                 {
                     case "AnalogInput":
-                        dc.AddTag(new AnalogInput(name, "User added AI", address, 0, 100, "°C", 1000, scan));
+                        dc.AddTag(new AnalogInput(
+                            name,
+                            desc,
+                            address,
+                            addWindow.LowLimit,
+                            addWindow.HighLimit,
+                            addWindow.Units,
+                            addWindow.ScanTime,
+                            addWindow.OnOffScan
+                        ));
                         break;
-                    case "DigitalInput":
-                        dc.AddTag(new DigitalInput(name, "User added DI", address, 1000, scan));
-                        break;
+
                     case "AnalogOutput":
-                        dc.AddTag(new AnalogOutput(name, "User added AO", address, 0, 100, 0, "°C"));
+                        dc.AddTag(new AnalogOutput(
+                            name,
+                            desc,
+                            address,
+                            addWindow.InitialValue,
+                            addWindow.LowLimit,
+                            addWindow.HighLimit,
+                            addWindow.Units
+                        ));
                         break;
+
+                    case "DigitalInput":
+                        dc.AddTag(new DigitalInput(
+                            name,
+                            desc,
+                            address,
+                            addWindow.ScanTime,
+                            addWindow.OnOffScan
+                        ));
+                        break;
+
                     case "DigitalOutput":
-                        dc.AddTag(new DigitalOutput(name, "User added DO", address, false));
+                        dc.AddTag(new DigitalOutput(
+                            name,
+                            desc,
+                            address,
+                            addWindow.InitialValue != 0
+                        ));
                         break;
                 }
 
@@ -103,6 +145,75 @@ namespace ScadaGUI
         private void Stop_Click(object sender, RoutedEventArgs e)
         {
             dc.StopScanning();
+        }
+
+        private void AddAlarm_Click(object sender, RoutedEventArgs e)
+        {
+            // Filter samo analogne input tagove
+            var analogInputs = dc.GetAllTags().OfType<AnalogInput>().ToList();
+            if (analogInputs.Count == 0)
+            {
+                MessageBox.Show("No Analog Inputs available to add alarms.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            var addAlarmWindow = new AddAlarmWindow(analogInputs);
+            if (addAlarmWindow.ShowDialog() == true)
+            {
+                var selectedTag = addAlarmWindow.SelectedTag;
+                if (selectedTag != null)
+                {
+                    var newAlarm = new Alarm(
+                        addAlarmWindow.AlarmId,
+                        selectedTag.TagName,
+                        addAlarmWindow.LimitValue,
+                        addAlarmWindow.IsHigh ? AlarmType.High : AlarmType.Low,
+                        addAlarmWindow.MessageText
+                    );
+
+                    selectedTag.AddAlarm(newAlarm);
+
+                    // Snimi sve tagove u XML
+                    configManager.SaveConfiguration(dc.GetAllTags());
+
+                    RefreshTables();
+                }
+            }
+        }
+
+        private void RemoveAlarm_Click(object sender, RoutedEventArgs e)
+        {
+            // Prikupi sve alarme iz svih analognih inputa
+            var allAlarms = dc.GetAllTags()
+                              .OfType<AnalogInput>()
+                              .SelectMany(ai => ai.Alarms)
+                              .ToList();
+
+            if (allAlarms.Count == 0)
+            {
+                MessageBox.Show("No alarms to remove.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            var removeWindow = new RemoveAlarmWindow(allAlarms);
+            if (removeWindow.ShowDialog() == true)
+            {
+                var alarmToRemove = removeWindow.SelectedAlarm;
+                if (alarmToRemove != null)
+                {
+                    // Pronađi tag kojem pripada i ukloni alarm
+                    var tag = dc.GetAllTags()
+                                .OfType<AnalogInput>()
+                                .FirstOrDefault(ai => ai.TagName == alarmToRemove.TagName);
+
+                    tag?.RemoveAlarm(alarmToRemove.Id);
+
+                    // Snimi sve tagove u XML
+                    configManager.SaveConfiguration(dc.GetAllTags());
+
+                    RefreshTables();
+                }
+            }
         }
     }
 }

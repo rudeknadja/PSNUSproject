@@ -1,0 +1,11 @@
+﻿<Window x:Class="ScadaGUI.RemoveAlarmWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Remove Alarm" Height="200" Width="300">
+    <StackPanel Margin="10">
+        <TextBlock Text="Select Alarm to remove:"/>
+        <ComboBox x:Name="AlarmComboBox" DisplayMemberPath="Id"/>
+
+        <Button Content="Remove" Margin="0,10,0,0" Width="80" HorizontalAlignment="Right" Click="Remove_Click"/>
+    </StackPanel>
+</Window>

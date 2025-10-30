@@ -19,8 +19,11 @@ namespace DataConcentrator
         public double Limit { get; set; }
         public AlarmType Type { get; set; }
         public string Message { get; set; }
-        public DateTime? TimeActivated { get; private set; }
-        public bool IsActive { get; private set; }
+        public DateTime? TimeActivated { get; set; }
+        public bool IsActive { get; set; }
+
+
+        public Alarm() { }
 
         public Alarm(string id, string tagName, double limit, AlarmType type, string message)
         {

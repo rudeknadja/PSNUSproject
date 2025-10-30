@@ -13,9 +13,14 @@ namespace DataConcentrator
         public string Units { get; set; }
         public int ScanTime { get; set; } // u milisekundama
         public bool OnOffScan { get; set; }
-        public double CurrentValue { get; private set; }
+        public double CurrentValue { get; set; }
 
         public List<Alarm> Alarms { get; private set; } = new List<Alarm>();
+
+        //da li ima alarme, tj. da li je alarms true stavjen kada se kreirao analog input
+        public bool HasAlarms => Alarms.Count > 0;
+
+        public AnalogInput() : base() { }
 
         public AnalogInput(string tagName, string description, string ioAddress,
                            double lowLimit, double highLimit, string units, int scanTime, bool onOffScan)
@@ -38,12 +43,6 @@ namespace DataConcentrator
         {
             CurrentValue = value;
 
-            // Proveri da li je vrednost van granica
-            if (value < LowLimit || value > HighLimit)
-            {
-              //  Console.WriteLine($"[WARNING] {TagName}: Value {value}{Units} out of allowed range ({LowLimit}-{HighLimit})");
-            }
-
             // Proveri sve alarme koji su vezani za ovu veličinu
             foreach (var alarm in Alarms)
             {
@@ -51,13 +50,14 @@ namespace DataConcentrator
             }
         }
 
-        public void AddAlarm(Alarm alarm)
+        public override void AddAlarm(Alarm alarm)
         {
             if (alarm.TagName != TagName)
             {
-               // Console.WriteLine($"[WARNING] Alarm {alarm.Id} is linked to a different tag!");
+                // Console.WriteLine($"[WARNING] Alarm {alarm.Id} is linked to a different tag!");
                 return;
             }
+
             Alarms.Add(alarm);
         }
 
@@ -65,6 +65,5 @@ namespace DataConcentrator
         {
             Alarms.RemoveAll(a => a.Id == alarmId);
         }
-
     }
 }
